@@ -4,6 +4,9 @@ import { createRoot } from 'react-dom/client';
 import Servers from './pages/servers';
 import Login from './pages/login';
 
+import { AuthProvider } from './auth';
+import { Layout, PrivateRoute } from './components';
+
 import { BrowserRouter, Routes, Route } from 'react-router';
 
 import { createGlobalStyle } from 'styled-components';
@@ -29,11 +32,22 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GlobalStyle />
     <BrowserRouter>
-      <Routes>
-        <Route path="/servers" element={<Servers />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="*" element={<h1>Not Found</h1>} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<Layout />}>
+            <Route
+              path="/servers"
+              element={
+                <PrivateRoute>
+                  <Servers />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route path="*" element={<h1>Not Found</h1>} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 );

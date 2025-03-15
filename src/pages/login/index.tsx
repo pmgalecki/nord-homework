@@ -1,18 +1,18 @@
+import LoginForm from './form';
+import { Navigate } from 'react-router';
+import { useAuth } from '../../hooks';
+
 function Login() {
+  const { handleLogin, loginError, isAuthenticated } = useAuth();
+
+  if (isAuthenticated) return <Navigate to="/servers" />;
+
   return (
     <div>
-      <h1>Login</h1>
-      <form>
-        <label>
-          Email:
-          <input type="email" name="email" />
-        </label>
-        <label>
-          Password:
-          <input type="password" name="password" />
-        </label>
-        <button type="submit">Login</button>
-      </form>
+      <LoginForm handleOnSubmit={handleLogin} />
+      {loginError && (
+        <span style={{ color: 'tomato', fontSize: 22 }}>{loginError}</span>
+      )}
     </div>
   );
 }
