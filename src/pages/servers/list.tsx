@@ -1,38 +1,17 @@
-import styled from 'styled-components';
-import { v4 as uuid } from 'uuid';
+import Table from '../../components/table';
 
 import { Server } from '.';
 
 function ServersList({ servers }: { servers: Server[] }) {
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Distance</th>
-        </tr>
-      </thead>
-      <tbody>
-        {servers.map((server) => {
-          return (
-            <tr key={uuid()}>
-              <td>{server.name}</td>
-              <td>{server.distance}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+    <Table
+      data={servers}
+      columns={[
+        { index: 'name', title: 'Name' },
+        { index: 'distance', title: 'Distance' },
+      ]}
+    />
   );
 }
-
-const Table = styled.table`
-  tbody {
-    tr {
-      background-color: white;
-      color: #333;
-    }
-  }
-`;
 
 export default ServersList;

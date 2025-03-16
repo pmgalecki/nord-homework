@@ -11,6 +11,7 @@ function Servers() {
     queryFn: () => getData('servers'),
     staleTime: 0,
     gcTime: 0,
+    refetchOnWindowFocus: false,
   });
 
   return (
