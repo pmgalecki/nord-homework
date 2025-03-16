@@ -1,15 +1,16 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router';
+import { createGlobalStyle } from 'styled-components';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import Servers from './pages/servers';
 import Login from './pages/login';
-
 import { AuthProvider } from './auth';
 import { Layout, PrivateRoute } from './components';
+import { LOGIN_PATH, SERVERS_PATH } from './constants';
 
-import { BrowserRouter, Routes, Route } from 'react-router';
-
-import { createGlobalStyle } from 'styled-components';
+const queryClient = new QueryClient();
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -33,20 +34,22 @@ createRoot(document.getElementById('root')!).render(
     <GlobalStyle />
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<Layout />}>
-            <Route
-              path="/servers"
-              element={
-                <PrivateRoute>
-                  <Servers />
-                </PrivateRoute>
-              }
-            />
-          </Route>
-          <Route path="*" element={<h1>Not Found</h1>} />
-        </Routes>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path={LOGIN_PATH} element={<Login />} />
+            <Route element={<Layout />}>
+              <Route
+                path={SERVERS_PATH}
+                element={
+                  <PrivateRoute>
+                    <Servers />
+                  </PrivateRoute>
+                }
+              />
+            </Route>
+            <Route path="*" element={<h1>Not Found</h1>} />
+          </Routes>
+        </QueryClientProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

@@ -1,5 +1,4 @@
-const baseUrl = 'https://playground.tesonet.lt/v1';
-
+import { BASE_URL } from '../constants';
 type TokenResponse = { token: string };
 
 async function getToken(username: string, password: string) {
@@ -7,7 +6,7 @@ async function getToken(username: string, password: string) {
   let error: string | undefined;
 
   try {
-    const response = await fetch(`${baseUrl}/tokens`, {
+    const response = await fetch(`${BASE_URL}/tokens`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
