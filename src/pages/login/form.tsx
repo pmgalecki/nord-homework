@@ -1,4 +1,6 @@
-import { Formik, Field, Form, ErrorMessage, FormikHelpers } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
+
+import TextInput from '../../components/text-input';
 
 export interface LoginValues {
   username: string;
@@ -43,24 +45,19 @@ function LoginForm({ handleOnSubmit }: LoginFormProps) {
       >
         {({ isSubmitting }) => (
           <Form>
-            <label htmlFor="username">Username</label>
-            <Field
-              id="username"
+            <TextInput
               name="username"
-              type="text"
               placeholder="Enter your username"
+              label="Username"
+              type="text"
             />
-            <ErrorMessage name="username" />
 
-            <label htmlFor="password">Password</label>
-            <Field
-              id="password"
+            <TextInput
               name="password"
-              type="password"
               placeholder="Enter your password"
-              autoComplete="on"
+              label="Password"
+              type="password"
             />
-            <ErrorMessage name="password" />
             <button type="submit" disabled={isSubmitting}>
               Login
             </button>

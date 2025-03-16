@@ -61,19 +61,8 @@ function Table<DataType extends object>({
     return order == 'asc' ? <span>&#8593;</span> : <span>&#8595;</span>;
   };
 
-  const handleSearch = (searchString: string) => {
-    const filtered = rows.filter((row) => {
-      const current = Object.values(row)[0];
-
-      return current.startsWith(searchString);
-    });
-
-    setRows(filtered);
-  };
-
   return (
     <>
-      <input onChange={(e) => handleSearch(e.target.value)} />
       <StyledTable>
         <thead>
           <tr>
