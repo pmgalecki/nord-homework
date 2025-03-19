@@ -1,4 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
+import styled from 'styled-components';
+
 import { getData } from '../../data/get-data';
 
 import ServersList from './list';
@@ -6,7 +8,7 @@ import ServersList from './list';
 export type Server = { name: string; distance: number };
 
 function Servers() {
-  const { data, isLoading, refetch } = useQuery<Server[]>({
+  const { data, isLoading } = useQuery<Server[]>({
     queryKey: ['servers'],
     queryFn: () => getData('servers'),
     staleTime: 0,
@@ -15,13 +17,20 @@ function Servers() {
   });
 
   return (
-    <div>
+    <Layout>
       <h1>Servers</h1>
-      <button onClick={() => refetch()}>Refresh list</button>
       {isLoading && <h2>Loading data...</h2>}
       {data && <ServersList servers={data} />}
-    </div>
+    </Layout>
   );
 }
+
+const Layout = styled.div`
+  margin: 0 25px;
+
+  h1 {
+    margin-bottom: 25px;
+  }
+`;
 
 export default Servers;

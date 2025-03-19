@@ -6,34 +6,57 @@ interface TextInputProps {
   name: string;
   placeholder: string;
   label: string;
+  isError: boolean;
 }
 
 function TextInput({
   name,
   placeholder,
   label,
+  isError,
   ...rest
 }: TextInputProps & InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <div>
-      <label htmlFor={name}>{label}</label>
+    <InputContainer>
+      <Label $isError={isError} htmlFor={name}>
+        {label}
+      </Label>
       <Field id={name} name={name}>
         {({ field }: FieldProps) => (
-          <div>
-            <Input {...field} {...rest} placeholder={placeholder} />
-          </div>
+          <Input
+            $isError={isError}
+            {...field}
+            {...rest}
+            placeholder={placeholder}
+          />
         )}
       </Field>
-      <ErrorMessage name={name} />
-    </div>
+      <ErrorMessage
+        name={name}
+        render={(msg) => <span style={{ color: 'tomato' }}>{msg}</span>}
+      />
+    </InputContainer>
   );
 }
 
-const Input = styled.input`
-  padding: 8px;
-  width: 50%;
-
-  border: 1px solid #333;
+const Label = styled.label<{ $isError?: boolean }>`
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: ${({ $isError }) => ($isError ? 'tomato' : '#a7a7a7')};
 `;
 
-export default TextInput;
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+const Input = styled.input<{ $isError?: boolean }>`
+  padding: 8px 15px;
+  border: 1px solid;
+  border-color: ${({ $isError }) => ($isError ? 'tomato' : '#a7a7a7')};
+  border-radius: 10px;
+`;
+
+export { TextInput };

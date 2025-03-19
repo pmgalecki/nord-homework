@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Table, { Column } from '.';
+import { Table, Column } from '.';
 
 type Row = { title: string; director: string; year: number };
 
@@ -21,14 +21,14 @@ const columns: Column<Row>[] = [
 
 const data: Row[] = [
   {
-    title: 'Shawshank Redemption',
-    director: 'Frank Darabont',
-    year: 1994,
-  },
-  {
     title: 'The Godfather',
     director: 'Francis Ford Coppola',
     year: 1972,
+  },
+  {
+    title: 'Shawshank Redemption',
+    director: 'Frank Darabont',
+    year: 1994,
   },
   {
     title: 'The Dark Knight',
@@ -58,11 +58,11 @@ describe('Table', () => {
   it('should sort data descending by year', async () => {
     render(<Table columns={columns} data={data} />);
 
-    const columnHead = screen.getByRole('button', { name: /year/i });
+    const columnHead = screen.getByText('Year');
     const rows = screen.getAllByRole('row');
     const yearColumnFirstRow = rows[1].children[2];
 
-    expect(yearColumnFirstRow).toContainHTML('<td>1994</td>');
+    expect(yearColumnFirstRow).toContainHTML('<td>1972</td>');
 
     fireEvent.click(columnHead);
 

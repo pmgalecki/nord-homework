@@ -2,12 +2,14 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
+import { SortIcon } from './sort-icon';
+
 export interface Column<DataType> {
   index: keyof DataType;
   title: string;
 }
 
-type Order = 'asc' | 'desc';
+export type Order = 'asc' | 'desc';
 
 interface TableProps<DataType> {
   data: DataType[];
@@ -21,15 +23,28 @@ const getNextOrder = (order: Order | undefined): Order => {
   return order == 'asc' ? 'desc' : 'asc';
 };
 
+const ROWS_PER_PAGE = 10;
+
 function Table<DataType extends object>({
   data,
   columns,
 }: TableProps<DataType>) {
   const [rows, setRows] = useState<DataType[]>(data);
+  const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState<{
     column: Column<DataType>['index'];
     order: Order;
   }>();
+
+  const visibleRows = rows.slice(
+    (currentPage - 1) * ROWS_PER_PAGE,
+    ROWS_PER_PAGE * currentPage,
+  );
+
+  const pageNumbers = [];
+  for (let i = 0; i < Math.ceil(rows.length / ROWS_PER_PAGE); i++) {
+    pageNumbers.push(i + 1);
+  }
 
   const handleSort = (index: Properties<DataType>) => {
     setSort({ column: index, order: getNextOrder(sort?.order) });
@@ -57,32 +72,34 @@ function Table<DataType extends object>({
     }
   };
 
-  const sortArrow = (order: Order) => {
-    return order == 'asc' ? <span>&#8593;</span> : <span>&#8595;</span>;
-  };
-
   return (
     <>
       <StyledTable>
+        <colgroup>
+          <col span={1} style={{ width: 50 }} />
+          <col span={1} style={{ width: 50 }} />
+        </colgroup>
         <thead>
           <tr>
             {columns.map((col) => {
               return (
                 <td key={uuid()}>
-                  <button
+                  <ColumnHeader
                     onClick={() => handleSort(col.index)}
                     style={{ cursor: 'pointer' }}
                   >
                     {col.title}
-                    {sort?.column === col.index && sortArrow(sort.order)}
-                  </button>
+                    {sort?.column === col.index && (
+                      <SortIcon order={sort.order} />
+                    )}
+                  </ColumnHeader>
                 </td>
               );
             })}
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => {
+          {visibleRows.map((row) => {
             const keys = Object.keys(row) as Properties<DataType>[];
 
             return (
@@ -95,19 +112,80 @@ function Table<DataType extends object>({
           })}
         </tbody>
       </StyledTable>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px',
+          marginTop: 15,
+        }}
+      >
+        {pageNumbers.map((page) => (
+          <PageButton
+            currentPage={page == currentPage}
+            key={page}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </PageButton>
+        ))}
+      </div>
     </>
   );
 }
 
+const PageButton = styled.span<{ currentPage: boolean }>`
+  font-weight: ${({ currentPage }) => (currentPage ? 600 : 500)};
+  font-size: ${({ currentPage }) => (currentPage ? '20px' : '16px')};
+  color: ${({ currentPage }) => (currentPage ? 'var(--purple)' : 'black')};
+
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 15px;
+  }
+`;
+
+const ColumnHeader = styled.span`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 5px;
+
+  &:hover {
+    color: var(--purple);
+  }
+`;
+
 const StyledTable = styled.table`
-  width: 600px;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 5px;
+  table-layout: fixed;
 
   tbody {
     tr {
       background-color: white;
-      color: #333;
+      line-height: 35px;
+
+      td {
+        max-height: 56px;
+        padding: 0 10px;
+        font-weight: 500;
+
+        &:first-child {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+      }
     }
   }
 `;
 
-export default Table;
+export { Table };

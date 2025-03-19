@@ -1,6 +1,6 @@
 import { Formik, Form, FormikHelpers } from 'formik';
 
-import TextInput from '../../components/text-input';
+import { TextInput, Button } from '../../components';
 
 export interface LoginValues {
   username: string;
@@ -43,13 +43,14 @@ function LoginForm({ handleOnSubmit }: LoginFormProps) {
         }}
         validate={validate}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors, touched }) => (
           <Form>
             <TextInput
               name="username"
               placeholder="Enter your username"
               label="Username"
               type="text"
+              isError={!!(errors.username && touched.username)}
             />
 
             <TextInput
@@ -57,10 +58,11 @@ function LoginForm({ handleOnSubmit }: LoginFormProps) {
               placeholder="Enter your password"
               label="Password"
               type="password"
+              isError={!!(errors.password && touched.password)}
             />
-            <button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting}>
               Login
-            </button>
+            </Button>
           </Form>
         )}
       </Formik>
