@@ -7,7 +7,8 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-weight: 500;
   cursor: ${({ disabled }) => (disabled ? 'wait' : 'pointer')};
   color: white;
-  background-color: var(--blue-grey);
+  background-color: ${({ disabled }) =>
+    disabled ? 'var(--light-blue-grey)' : 'var(--blue-grey)'};
   width: 100%;
 
   &:active {

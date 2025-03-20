@@ -6,19 +6,25 @@ import { useAuth } from '../../hooks';
 import { sizes } from '../../styles/break-points';
 
 function Login() {
-  const { handleLogin, isAuthenticated } = useAuth();
+  const { handleLogin, isAuthenticated, loginError } = useAuth();
 
   if (isAuthenticated) return <Navigate to="/servers" />;
 
   return (
     <Layout>
       <FormContainer>
-        <h1 style={{ marginBottom: 25, textAlign: 'center' }}>Nord homework</h1>
+        <Title>Nord homework</Title>
         <LoginForm handleOnSubmit={handleLogin} />
+        {loginError && <span>{loginError}</span>}
       </FormContainer>
     </Layout>
   );
 }
+
+const Title = styled.h1`
+  margin-bottom: 25px;
+  text-align: center;
+`;
 
 const FormContainer = styled.div`
   padding: 30px;

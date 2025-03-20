@@ -30,7 +30,7 @@ function App() {
                   }
                 />
               </Route>
-              <Route path="*" element={<h1>Not Found</h1>} />
+              <Route path="*" element={<Login />} />
             </Routes>
           </QueryClientProvider>
         </AuthProvider>
@@ -52,7 +52,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: var(--blue);
+    background-color: var(--beige);
   }
 
   :root {
@@ -61,17 +61,18 @@ const GlobalStyle = createGlobalStyle`
     --light-blue-grey: #b6c4ce;
     --grey: #a7a7a7;
     --blue: #7dc4e8;
+    --beige: #e1e1e1;
 
-    --shadow-color: 201deg 49% 39%;
+    --shadow-color: 0deg 0% 55%;
     --shadow-elevation-low:
-      0.4px 0.7px 0.9px hsl(var(--shadow-color) / 0.39),
-      0.7px 1.3px 1.7px -1.2px hsl(var(--shadow-color) / 0.39),
-      1.8px 3.2px 4.1px -2.5px hsl(var(--shadow-color) / 0.39);
+      0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+      0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
+      1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
     --shadow-elevation-medium:
-      0.4px 0.7px 0.9px hsl(var(--shadow-color) / 0.41),
-      1.5px 2.5px 3.3px -0.8px hsl(var(--shadow-color) / 0.41),
-      3.8px 6.4px 8.4px -1.7px hsl(var(--shadow-color) / 0.41),
-      9.2px 15.8px 20.6px -2.5px hsl(var(--shadow-color) / 0.41);
+      0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.36),
+      0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.36),
+      2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.36),
+      5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
   }
 
   button,

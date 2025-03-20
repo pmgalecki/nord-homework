@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
@@ -25,6 +25,9 @@ const getNextOrder = (order: Order | undefined): Order => {
 
 const ROWS_PER_PAGE = 10;
 
+const getRangeArray = (start: number, end: number) =>
+  Array.from({ length: end - start + 1 }, (_, i) => i + 1);
+
 function Table<DataType extends object>({
   data,
   columns,
@@ -41,10 +44,8 @@ function Table<DataType extends object>({
     ROWS_PER_PAGE * currentPage,
   );
 
-  const pageNumbers = [];
-  for (let i = 0; i < Math.ceil(rows.length / ROWS_PER_PAGE); i++) {
-    pageNumbers.push(i + 1);
-  }
+  const pagesCount = Math.ceil(rows.length / ROWS_PER_PAGE);
+  const pages = useMemo(() => getRangeArray(1, pagesCount), [pagesCount]);
 
   const handleSort = (index: Properties<DataType>) => {
     setSort({ column: index, order: getNextOrder(sort?.order) });
@@ -84,10 +85,7 @@ function Table<DataType extends object>({
             {columns.map((col) => {
               return (
                 <td key={uuid()}>
-                  <ColumnHeader
-                    onClick={() => handleSort(col.index)}
-                    style={{ cursor: 'pointer' }}
-                  >
+                  <ColumnHeader onClick={() => handleSort(col.index)}>
                     {col.title}
                     {sort?.column === col.index && (
                       <SortIcon order={sort.order} />
@@ -112,33 +110,33 @@ function Table<DataType extends object>({
           })}
         </tbody>
       </StyledTable>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '10px',
-          marginTop: 15,
-        }}
-      >
-        {pageNumbers.map((page) => (
+      <PaginationContainer>
+        {pages.map((page) => (
           <PageButton
-            currentPage={page == currentPage}
+            $currentPage={page == currentPage}
             key={page}
             onClick={() => setCurrentPage(page)}
           >
             {page}
           </PageButton>
         ))}
-      </div>
+      </PaginationContainer>
     </>
   );
 }
 
-const PageButton = styled.span<{ currentPage: boolean }>`
-  font-weight: ${({ currentPage }) => (currentPage ? 600 : 500)};
-  font-size: ${({ currentPage }) => (currentPage ? '20px' : '16px')};
-  color: ${({ currentPage }) => (currentPage ? 'var(--purple)' : 'black')};
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+`;
+
+const PageButton = styled.span<{ $currentPage: boolean }>`
+  font-weight: ${({ $currentPage }) => ($currentPage ? 600 : 500)};
+  font-size: ${({ $currentPage }) => ($currentPage ? '20px' : '16px')};
+  color: ${({ $currentPage }) => ($currentPage ? 'var(--purple)' : 'black')};
 
   cursor: pointer;
   padding: 7px 14px;

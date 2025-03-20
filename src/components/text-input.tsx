@@ -33,11 +33,16 @@ function TextInput({
       </Field>
       <ErrorMessage
         name={name}
-        render={(msg) => <span style={{ color: 'tomato' }}>{msg}</span>}
+        render={(msg) => <ValidationError>{msg}</ValidationError>}
       />
     </InputContainer>
   );
 }
+
+const ValidationError = styled.span`
+  color: tomato;
+  font-size: 14px;
+`;
 
 const Label = styled.label<{ $isError?: boolean }>`
   font-size: 14px;
