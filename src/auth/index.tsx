@@ -38,6 +38,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsAuthenticated(true);
       setToken(localStorage.getItem('token'));
       setUsername(localStorage.getItem('username'));
+      setLoginError('');
       navigate(SERVERS_PATH);
     }
     if (error) setLoginError(error);

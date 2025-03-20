@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks';
 import { sizes } from '../../styles/break-points';
 
 function Login() {
-  const { handleLogin, isAuthenticated, loginError } = useAuth();
+  const { handleLogin, isAuthenticated } = useAuth();
 
   if (isAuthenticated) return <Navigate to="/servers" />;
 
@@ -15,7 +15,6 @@ function Login() {
       <FormContainer>
         <Title>Nord homework</Title>
         <LoginForm handleOnSubmit={handleLogin} />
-        {loginError && <span>{loginError}</span>}
       </FormContainer>
     </Layout>
   );

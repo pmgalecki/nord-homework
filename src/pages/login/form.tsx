@@ -1,6 +1,14 @@
-import { Formik, Form, FormikHelpers } from 'formik';
+import {
+  Formik,
+  Form,
+  FormikHelpers,
+  FormikErrors,
+  FormikTouched,
+} from 'formik';
+import styled from 'styled-components';
 
 import { TextInput, Button } from '../../components';
+import { useAuth } from '../../hooks';
 
 export interface LoginValues {
   username: string;
@@ -25,7 +33,21 @@ interface LoginFormProps {
   handleOnSubmit: (values: LoginValues) => Promise<void>;
 }
 
+const shouldDisplayLoginError = (
+  errors: FormikErrors<LoginValues>,
+  touched: FormikTouched<LoginValues>,
+) => {
+  return (
+    !errors.username &&
+    !touched.username &&
+    !errors.password &&
+    !touched.password
+  );
+};
+
 function LoginForm({ handleOnSubmit }: LoginFormProps) {
+  const { loginError } = useAuth();
+
   return (
     <>
       <Formik
@@ -63,11 +85,21 @@ function LoginForm({ handleOnSubmit }: LoginFormProps) {
             <Button type="submit" disabled={isSubmitting}>
               Login
             </Button>
+            {loginError && shouldDisplayLoginError(errors, touched) && (
+              <LoginError>{loginError}</LoginError>
+            )}
           </Form>
         )}
       </Formik>
     </>
   );
 }
+
+const LoginError = styled.p`
+  color: tomato;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 24px;
+`;
 
 export default LoginForm;
